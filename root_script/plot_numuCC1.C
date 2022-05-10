@@ -8,14 +8,14 @@ void plot_numuCC1(){
 
   auto c1 = new TCanvas("c1","",600,600);
 
-  T_eval->Draw("T_KINEvars.kine_reco_Enu*1e-3 >> h1(50,0.0,2.5)","T_BDTvars.numu_cc_flag>=0 && T_BDTvars.numu_score>0.9");
+  T_eval->Draw("T_KINEvars.kine_reco_Enu*1e-3 >> h1(50,0.0,2.5)","weight_cv* weight_spline* (T_BDTvars.numu_cc_flag>=0 && T_BDTvars.numu_score>0.9)");
   auto h1 = (TH1F*)gROOT->FindObject("h1");
   h1->GetXaxis()->SetTitle("E^{reco}_{#nu} (GeV)");
   h1->SetTitle("");
 
-  T_eval->Draw("T_KINEvars.kine_reco_Enu*1e-3 >> h2(50,0.0,2.5)","T_BDTvars.numu_cc_flag>=0 && T_BDTvars.numu_score>0.9 && match_completeness_energy<=0.1*truth_energyInside"); // incorrect charge-flash matching
-  T_eval->Draw("T_KINEvars.kine_reco_Enu*1e-3 >> h3(50,0.0,2.5)","T_BDTvars.numu_cc_flag>=0 && T_BDTvars.numu_score>0.9 && match_completeness_energy>0.1*truth_energyInside && truth_nuPdg==14 && truth_isCC && truth_vtxInside");  // numu CC in FV
-  T_eval->Draw("T_KINEvars.kine_reco_Enu*1e-3 >> h4(50,0.0,2.5)","T_BDTvars.numu_cc_flag>=0 && T_BDTvars.numu_score>0.9 && match_completeness_energy>0.1*truth_energyInside && truth_nuPdg==14 && ! truth_isCC && truth_vtxInside");  // numu NC in FV
+  T_eval->Draw("T_KINEvars.kine_reco_Enu*1e-3 >> h2(50,0.0,2.5)","weight_cv* weight_spline* (T_BDTvars.numu_cc_flag>=0 && T_BDTvars.numu_score>0.9 && match_completeness_energy<=0.1*truth_energyInside)"); // incorrect charge-flash matching
+  T_eval->Draw("T_KINEvars.kine_reco_Enu*1e-3 >> h3(50,0.0,2.5)","weight_cv* weight_spline* (T_BDTvars.numu_cc_flag>=0 && T_BDTvars.numu_score>0.9 && match_completeness_energy>0.1*truth_energyInside && truth_nuPdg==14 && truth_isCC && truth_vtxInside)");  // numu CC in FV
+  T_eval->Draw("T_KINEvars.kine_reco_Enu*1e-3 >> h4(50,0.0,2.5)","weight_cv* weight_spline* (T_BDTvars.numu_cc_flag>=0 && T_BDTvars.numu_score>0.9 && match_completeness_energy>0.1*truth_energyInside && truth_nuPdg==14 && ! truth_isCC && truth_vtxInside)");  // numu NC in FV
   auto h2 = (TH1F*)gROOT->FindObject("h2");
   auto h3 = (TH1F*)gROOT->FindObject("h3");
   auto h4 = (TH1F*)gROOT->FindObject("h4");
@@ -27,13 +27,13 @@ void plot_numuCC1(){
 
   h1->SetLineColor(1);
   h1->SetLineWidth(2);
-  h1->Draw();
+  h1->Draw("hist");
   THStack *hs = new THStack("hs","");
   h3->SetFillColor(kBlue); hs->Add(h3);
   h4->SetFillColor(kGreen); hs->Add(h4);
   h2->SetFillColor(kRed); hs->Add(h2);
   hother->SetFillColor(kYellow); hs->Add(hother);
-  hs->Draw("same");
+  hs->Draw("same hist");
 
   auto lg = new TLegend(0.5,0.6,0.8,0.8);
   lg->SetBorderSize(0);
